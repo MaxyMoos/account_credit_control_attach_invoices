@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_credit_control_with_invoice_document">
+        <t t-foreach="doc.credit_control_line_ids" t-as="cc_line">
+            <t t-if="cc_line.invoice_id">
+                <t t-call="account.report_invoice_document">
+                    <t t-set="o" t-value="cc_line.invoice_id.with_context(lang=doc.partner_id.lang)"/>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <template id="report_credit_control_invoice">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-call="account_credit_control_attach_invoices.report_credit_control_with_invoice_document" t-lang="doc.partner_id.lang"/>
+            </t>
+        </t>
+    </template>
+
+    <report
+        id="credit_control_with_invoice"
+        model="credit.control.communication"
+        string="Relances client avec factures"
+        report_type="qweb-pdf"
+        name="account_credit_control_attach_invoices.report_credit_control_invoice"
+        file="account_credit_control_attach_invoices.report_credit_control_invoice"
+    />
+
+</odoo>
